@@ -4,6 +4,7 @@ package com.isymber.model.user;
 import com.isymber.model.AbstractModel;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.Collections;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 public class User extends AbstractModel implements UserDetails {
 
     @Column(unique = true, nullable = false)
@@ -25,10 +27,6 @@ public class User extends AbstractModel implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    public User() {
-
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
