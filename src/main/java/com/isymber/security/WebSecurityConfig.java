@@ -47,7 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void get() {
         User appUserUser = new User("ja", passwordEncoder().encode("ja"), Role.USER);
         User appUserAdmin = new User("admin", passwordEncoder().encode("admin"), Role.ADMIN);
-        userRepo.save(appUserUser);
-        userRepo.save(appUserAdmin);
+        if (userRepo.findUserByLogin(appUserUser.getUsername()) == null && userRepo.findUserByLogin(appUserAdmin.getUsername()) == null){
+            userRepo.save(appUserUser);
+            userRepo.save(appUserAdmin);
+        }
     }
 }

@@ -2,16 +2,18 @@ package com.isymber.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.isymber.component.InitializeData;
+import com.isymber.model.CloudinaryCredentials;
 import com.isymber.model.Photo;
+import com.isymber.repository.CloudinaryRepo;
 import com.isymber.repository.PhotoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class PhotoUploader {
@@ -19,15 +21,17 @@ public class PhotoUploader {
     private final PhotoRepo photoRepo;
 
     @Autowired
-    public PhotoUploader(PhotoRepo photoRepo) {
+    public PhotoUploader(PhotoRepo photoRepo, CloudinaryRepo cloudinaryRepo, InitializeData initializeData) {
+        initializeData.loadData();
+        Optional<CloudinaryCredentials> cloudinaryCredentials = cloudinaryRepo.findById(1L);
         this.photoRepo = photoRepo;
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "galleryappvaadin",
-                "api_key", "439427514275794",
-                "api_secret", "HPnU_yEuAB3AxegPfDMVpn0eKbE"));
+                "cloud_name", cloudinaryCredentials.get().getCloud_name(),
+                "api_key", cloudinaryCredentials.get().getApi_key(),
+                "api_secret", cloudinaryCredentials.get().getApi_secret()));
     }
 
-    private String uploadPhoto(String path){
+    private String uploadPhoto(String path) {
         File file = new File(path);
         Map uploadResult = null;
         try {
@@ -40,9 +44,7 @@ public class PhotoUploader {
         return uploadResult.get("url").toString();
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void savePhoto(){
-        String path = "C:\\Users\\Kamil\\Downloads\\enego.png";
+    public void savePhoto(String path) {
         photoRepo.save(new Photo(uploadPhoto(path)));
     }
 }

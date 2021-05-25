@@ -10,7 +10,7 @@ import java.util.Date;
 
 @MappedSuperclass
 @Data
-public abstract class AbstractModel{
+public abstract class AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
