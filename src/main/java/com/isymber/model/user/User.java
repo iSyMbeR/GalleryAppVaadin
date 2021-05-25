@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -17,10 +19,11 @@ import java.util.Collections;
 @AllArgsConstructor
 public class User extends AbstractModel implements UserDetails {
 
-    @NotNull
-    private String password;
     @Column(unique = true, nullable = false)
     private String login;
+    @NotNull
+    private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public User() {
